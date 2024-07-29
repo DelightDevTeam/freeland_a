@@ -120,11 +120,19 @@ trait UseWebhook
         'meta' => $meta,
     ]);
 
-     Log::info("Calling WalletService transfer", [
+    //  Log::info("Calling WalletService transfer", [
+    //     'from' => $from,
+    //     'to' => $to,
+    //     'amount' => $amount,
+    //     'transactionName' => $transactionName,
+    //     'meta' => $meta,
+    // ]);
+     Log::info("WalletService transfer called", [
         'from' => $from,
         'to' => $to,
         'amount' => $amount,
-        'transactionName' => $transactionName,
+        'transactionName' => gettype($transactionName), // Log the type
+        'transactionName_value' => $transactionName,   // Log the value
         'meta' => $meta,
     ]);
         // TODO: ask: what if operator doesn't want to pay bonus
