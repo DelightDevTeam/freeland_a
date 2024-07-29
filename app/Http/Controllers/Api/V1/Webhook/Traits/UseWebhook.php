@@ -83,7 +83,7 @@ trait UseWebhook
 
             $rate = $game_type_product->rate;
 
-            Log::info("Rate is: {$rate}");
+            //Log::info("Rate is: {$rate}");
 
             // Debugging statements
             //logger()->info('GameType:', ['GameType' => $game_type]);
@@ -110,6 +110,15 @@ trait UseWebhook
 
     public function processTransfer(User $from, User $to, TransactionName $transactionName, float $amount, int $rate, array $meta)
     {
+         // Log the parameters
+    Log::info("Process transfer called", [
+        'from' => $from,
+        'to' => $to,
+        'transactionName' => $transactionName,
+        'amount' => $amount,
+        'rate' => $rate,
+        'meta' => $meta,
+    ]);
         // TODO: ask: what if operator doesn't want to pay bonus
         app(WalletService::class)
             ->transfer(
