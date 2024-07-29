@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1\Webhook\Traits;
 
-use App\Enums\TransactionName;
-use App\Enums\TransactionStatus;
-use App\Enums\WagerStatus;
-use App\Http\Requests\Slot\SlotWebhookRequest;
-use App\Models\Admin\GameType;
-use App\Models\Admin\GameTypeProduct;
-use App\Models\Admin\Product;
-use App\Models\SeamlessEvent;
-use App\Models\SeamlessTransaction;
+use Exception;
 use App\Models\User;
 use App\Models\Wager;
-use App\Services\Slot\Dto\RequestTransaction;
+use App\Enums\WagerStatus;
+use App\Models\Admin\Product;
+use App\Models\SeamlessEvent;
+use App\Enums\TransactionName;
+use App\Models\Admin\GameType;
 use App\Services\WalletService;
-use Exception;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Enums\TransactionStatus;
+use App\Models\SeamlessTransaction;
+use Illuminate\Support\Facades\Log;
+use App\Models\Admin\GameTypeProduct;
+use App\Services\Slot\Dto\RequestTransaction;
+use App\Http\Requests\Slot\SlotWebhookRequest;
 use Illuminate\Database\Eloquent\MassAssignmentException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 trait UseWebhook
 {
@@ -81,6 +82,14 @@ trait UseWebhook
                 ->first();
 
             $rate = $game_type_product->rate;
+
+            Log::info("Rate is: {$rate}");
+
+            // Debugging statements
+            logger()->info('GameType:', ['GameType' => $game_type]);
+            logger()->info('Product:', ['Product' => $product]);
+            logger()->info('GameTypeProduct:', ['GameTypeProduct' => $game_type_product]);
+
 
             $seamless_transactions[] = $event->transactions()->create([
                 'user_id' => $event->user_id,
