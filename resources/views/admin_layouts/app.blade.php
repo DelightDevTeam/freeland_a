@@ -41,6 +41,25 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Apply dark mode by default
+    document.body.classList.add('dark-version');
+
+    // Ensure the dark mode toggle is checked
+    const darkModeToggle = document.getElementById('dark-version');
+    if (darkModeToggle) {
+      darkModeToggle.checked = true;
+    }
+
+    // Set the sidebar color to dark by default
+    const sidebar = document.querySelector('.sidenav');
+    if (sidebar) {
+      sidebar.classList.add('bg-gradient-dark');
+    }
+  });
+  </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script src="{{asset('admin_app/assets/js/material-dashboard.min.js?v=3.0.6')}}"></script>
