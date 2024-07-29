@@ -119,6 +119,14 @@ trait UseWebhook
         'rate' => $rate,
         'meta' => $meta,
     ]);
+
+     Log::info("Calling WalletService transfer", [
+        'from' => $from,
+        'to' => $to,
+        'amount' => $amount,
+        'transactionName' => $transactionName,
+        'meta' => $meta,
+    ]);
         // TODO: ask: what if operator doesn't want to pay bonus
         app(WalletService::class)
             ->transfer(
