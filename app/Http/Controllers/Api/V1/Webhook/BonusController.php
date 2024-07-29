@@ -20,114 +20,114 @@ class BonusController extends Controller
 {
     use UseWebhook;
 
+//     public function bonus(SlotWebhookRequest $request)
+// {
+//     DB::beginTransaction();
+//     try {
+//         $validator = $request->check();
+
+//         if ($validator->fails()) {
+//             return $validator->getResponse();
+//         }
+
+//         $before_balance = $request->getMember()->balanceFloat;
+//         //return $before_balance;
+
+//         $event = $this->createEvent($request);
+
+//         $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
+
+//         foreach ($seamless_transactions as $seamless_transaction) {
+//             // Log the transaction details
+//             Log::info("Processing seamless transaction", ['seamless_transaction' => $seamless_transaction]);
+
+//             // TODO: ask: what if operator doesn't want to pay bonus
+//             $this->processTransfer(
+//                 User::adminUser(),
+//                 $request->getMember(),
+//                 TransactionName::Bonus,
+//                 $seamless_transaction->transaction_amount,
+//                 $seamless_transaction->rate,
+//                 [
+//                     'wager_id' => $seamless_transaction->wager_id,
+//                     'event_id' => $request->getMessageID(),
+//                     'seamless_transaction_id' => $seamless_transaction->id,
+//                 ]
+//             );
+//         }
+
+//         $request->getMember()->wallet->refreshBalance();
+
+//         $after_balance = $request->getMember()->balanceFloat;
+
+//         DB::commit();
+
+//         return SlotWebhookService::buildResponse(
+//             SlotWebhookResponseCode::Success,
+//             $after_balance,
+//             $before_balance
+//         );
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+
+//         return response()->json([
+//             'message' => $e->getMessage(),
+//         ]);
+//     }
+// }
+
+
     public function bonus(SlotWebhookRequest $request)
-{
-    DB::beginTransaction();
-    try {
-        $validator = $request->check();
+    {
+        DB::beginTransaction();
+        try {
+            $validator = $request->check();
 
-        if ($validator->fails()) {
-            return $validator->getResponse();
-        }
+            if ($validator->fails()) {
+                return $validator->getResponse();
+            }
 
-        $before_balance = $request->getMember()->balanceFloat;
-        //return $before_balance;
+            $before_balance = $request->getMember()->balanceFloat;
 
-        $event = $this->createEvent($request);
+            $event = $this->createEvent($request);
 
-        $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
+            $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
 
-        foreach ($seamless_transactions as $seamless_transaction) {
-            // Log the transaction details
-            Log::info("Processing seamless transaction", ['seamless_transaction' => $seamless_transaction]);
+            foreach ($seamless_transactions as $seamless_transaction) {
+                // TODO: ask: what if operator doesn't want to pay bonus
+                $this->processTransfer(
+                    User::adminUser(),
+                    $request->getMember(),
+                    TransactionName::Bonus,
+                    $seamless_transaction->transaction_amount,
+                    $seamless_transaction->rate,
+                    [
+                        'wager_id' => $seamless_transaction->wager_id,
+                        'event_id' => $request->getMessageID(),
+                        'seamless_transaction_id' => $seamless_transaction->id,
+                    ]
+                );
+            }
 
-            // TODO: ask: what if operator doesn't want to pay bonus
-            $this->processTransfer(
-                User::adminUser(),
-                $request->getMember(),
-                TransactionName::Bonus,
-                $seamless_transaction->transaction_amount,
-                $seamless_transaction->rate,
-                [
-                    'wager_id' => $seamless_transaction->wager_id,
-                    'event_id' => $request->getMessageID(),
-                    'seamless_transaction_id' => $seamless_transaction->id,
-                ]
+            $request->getMember()->wallet->refreshBalance();
+
+            $after_balance = $request->getMember()->balanceFloat;
+
+            DB::commit();
+
+            DB::commit();
+
+            return SlotWebhookService::buildResponse(
+                SlotWebhookResponseCode::Success,
+                $after_balance,
+                $before_balance
             );
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => $e->getMessage(),
+            ]);
         }
-
-        $request->getMember()->wallet->refreshBalance();
-
-        $after_balance = $request->getMember()->balanceFloat;
-
-        DB::commit();
-
-        return SlotWebhookService::buildResponse(
-            SlotWebhookResponseCode::Success,
-            $after_balance,
-            $before_balance
-        );
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return response()->json([
-            'message' => $e->getMessage(),
-        ]);
     }
-}
-
-
-    // public function bonus(SlotWebhookRequest $request)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $validator = $request->check();
-
-    //         if ($validator->fails()) {
-    //             return $validator->getResponse();
-    //         }
-
-    //         $before_balance = $request->getMember()->balanceFloat;
-
-    //         $event = $this->createEvent($request);
-
-    //         $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
-
-    //         foreach ($seamless_transactions as $seamless_transaction) {
-    //             // TODO: ask: what if operator doesn't want to pay bonus
-    //             $this->processTransfer(
-    //                 User::adminUser(),
-    //                 $request->getMember(),
-    //                 TransactionName::Bonus,
-    //                 $seamless_transaction->transaction_amount,
-    //                 $seamless_transaction->rate,
-    //                 [
-    //                     'wager_id' => $seamless_transaction->wager_id,
-    //                     'event_id' => $request->getMessageID(),
-    //                     'seamless_transaction_id' => $seamless_transaction->id,
-    //                 ]
-    //             );
-    //         }
-
-    //         $request->getMember()->wallet->refreshBalance();
-
-    //         $after_balance = $request->getMember()->balanceFloat;
-
-    //         DB::commit();
-
-    //         DB::commit();
-
-    //         return SlotWebhookService::buildResponse(
-    //             SlotWebhookResponseCode::Success,
-    //             $after_balance,
-    //             $before_balance
-    //         );
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         return response()->json([
-    //             'message' => $e->getMessage(),
-    //         ]);
-    //     }
-    // }
 }
