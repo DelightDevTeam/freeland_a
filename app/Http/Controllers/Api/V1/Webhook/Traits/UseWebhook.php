@@ -86,9 +86,9 @@ trait UseWebhook
             Log::info("Rate is: {$rate}");
 
             // Debugging statements
-            logger()->info('GameType:', ['GameType' => $game_type]);
-            logger()->info('Product:', ['Product' => $product]);
-            logger()->info('GameTypeProduct:', ['GameTypeProduct' => $game_type_product]);
+            //logger()->info('GameType:', ['GameType' => $game_type]);
+            //logger()->info('Product:', ['Product' => $product]);
+            //logger()->info('GameTypeProduct:', ['GameTypeProduct' => $game_type_product]);
 
 
             $seamless_transactions[] = $event->transactions()->create([
