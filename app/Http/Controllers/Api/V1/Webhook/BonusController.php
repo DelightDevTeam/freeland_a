@@ -31,7 +31,7 @@ class BonusController extends Controller
         }
 
         $before_balance = $request->getMember()->balanceFloat;
-        return $before_balance;
+        //return $before_balance;
 
         $event = $this->createEvent($request);
 
