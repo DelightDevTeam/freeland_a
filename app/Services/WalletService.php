@@ -57,7 +57,7 @@ class WalletService
 {
     public function forceTransfer(User $from, User $to, float $amount, TransactionName $transaction_name, array $meta = [])
     {
-        
+
         return $from->forceTransferFloat($to, $amount, new Extra(
             deposit: new Option(self::buildTransferMeta($to, $from, $transaction_name, $meta)),
             withdraw: new Option(self::buildTransferMeta($from, $to, $transaction_name, $meta))

@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1\Webhook\Traits;
 
-use Exception;
-use App\Models\User;
-use App\Models\Wager;
+use App\Enums\TransactionName;
+use App\Enums\TransactionStatus;
 use App\Enums\WagerStatus;
+use App\Http\Requests\Slot\SlotWebhookRequest;
+use App\Models\Admin\GameType;
+use App\Models\Admin\GameTypeProduct;
 use App\Models\Admin\Product;
 use App\Models\SeamlessEvent;
-use App\Enums\TransactionName;
-use App\Models\Admin\GameType;
-use App\Services\WalletService;
-use App\Enums\TransactionStatus;
 use App\Models\SeamlessTransaction;
-use Illuminate\Support\Facades\Log;
-use App\Models\Admin\GameTypeProduct;
+use App\Models\User;
+use App\Models\Wager;
 use App\Services\Slot\Dto\RequestTransaction;
-use App\Http\Requests\Slot\SlotWebhookRequest;
-use Illuminate\Database\Eloquent\MassAssignmentException;
+use App\Services\WalletService;
+use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\MassAssignmentException;
+use Illuminate\Support\Facades\Log;
 
 trait UseWebhook
 {
@@ -90,7 +90,6 @@ trait UseWebhook
             //logger()->info('Product:', ['Product' => $product]);
             //logger()->info('GameTypeProduct:', ['GameTypeProduct' => $game_type_product]);
 
-
             $seamless_transactions[] = $event->transactions()->create([
                 'user_id' => $event->user_id,
                 'wager_id' => $wager->id,
@@ -110,31 +109,31 @@ trait UseWebhook
 
     public function processTransfer(User $from, User $to, TransactionName $transactionName, float $amount, int $rate, array $meta)
     {
-         // Log the parameters
-    Log::info("Process transfer called", [
-        'from' => $from,
-        'to' => $to,
-        'transactionName' => $transactionName,
-        'amount' => $amount,
-        'rate' => $rate,
-        'meta' => $meta,
-    ]);
+        // Log the parameters
+        // Log::info("Process transfer called", [
+        //     'from' => $from,
+        //     'to' => $to,
+        //     'transactionName' => $transactionName,
+        //     'amount' => $amount,
+        //     'rate' => $rate,
+        //     'meta' => $meta,
+        // ]);
 
-    //  Log::info("Calling WalletService transfer", [
-    //     'from' => $from,
-    //     'to' => $to,
-    //     'amount' => $amount,
-    //     'transactionName' => $transactionName,
-    //     'meta' => $meta,
-    // ]);
-     Log::info("WalletService transfer called", [
-        'from' => $from,
-        'to' => $to,
-        'amount' => $amount,
-        'transactionName' => gettype($transactionName), // Log the type
-        'transactionName_value' => $transactionName,   // Log the value
-        'meta' => $meta,
-    ]);
+        //  Log::info("Calling WalletService transfer", [
+        //     'from' => $from,
+        //     'to' => $to,
+        //     'amount' => $amount,
+        //     'transactionName' => $transactionName,
+        //     'meta' => $meta,
+        // ]);
+        //  Log::info("WalletService transfer called", [
+        //     'from' => $from,
+        //     'to' => $to,
+        //     'amount' => $amount,
+        //     'transactionName' => gettype($transactionName), // Log the type
+        //     'transactionName_value' => $transactionName,   // Log the value
+        //     'meta' => $meta,
+        // ]);
         // TODO: ask: what if operator doesn't want to pay bonus
         app(WalletService::class)
             ->transfer(
