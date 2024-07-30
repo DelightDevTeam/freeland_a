@@ -14,68 +14,10 @@ use App\Services\Slot\SlotWebhookValidator;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class BonusController extends Controller
 {
     use UseWebhook;
-
-    //     public function bonus(SlotWebhookRequest $request)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $validator = $request->check();
-
-    //         if ($validator->fails()) {
-    //             return $validator->getResponse();
-    //         }
-
-    //         $before_balance = $request->getMember()->balanceFloat;
-    //         //return $before_balance;
-
-    //         $event = $this->createEvent($request);
-
-    //         $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
-
-    //         foreach ($seamless_transactions as $seamless_transaction) {
-    //             // Log the transaction details
-    //             Log::info("Processing seamless transaction", ['seamless_transaction' => $seamless_transaction]);
-
-    //             // TODO: ask: what if operator doesn't want to pay bonus
-    //             $this->processTransfer(
-    //                 User::adminUser(),
-    //                 $request->getMember(),
-    //                 TransactionName::Bonus,
-    //                 $seamless_transaction->transaction_amount,
-    //                 $seamless_transaction->rate,
-    //                 [
-    //                     'wager_id' => $seamless_transaction->wager_id,
-    //                     'event_id' => $request->getMessageID(),
-    //                     'seamless_transaction_id' => $seamless_transaction->id,
-    //                 ]
-    //             );
-    //         }
-
-    //         $request->getMember()->wallet->refreshBalance();
-
-    //         $after_balance = $request->getMember()->balanceFloat;
-
-    //         DB::commit();
-
-    //         return SlotWebhookService::buildResponse(
-    //             SlotWebhookResponseCode::Success,
-    //             $after_balance,
-    //             $before_balance
-    //         );
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         return response()->json([
-    //             'message' => $e->getMessage(),
-    //         ]);
-    //     }
-    // }
-    // OvGWmb
 
     public function bonus(SlotWebhookRequest $request)
     {
@@ -94,18 +36,6 @@ class BonusController extends Controller
             $seamless_transactions = $this->createWagerTransactions($validator->getRequestTransactions(), $event);
 
             foreach ($seamless_transactions as $seamless_transaction) {
-                Log::info('Processing seamless transaction', [
-                    'admin_user' => User::adminUser(),
-                    'member' => $request->getMember(),
-                    'transaction_name' => TransactionName::Bonus, // This should log 'bonus'
-                    'transaction_amount' => $seamless_transaction->transaction_amount,
-                    'rate' => $seamless_transaction->rate,
-                    'meta' => [
-                        'wager_id' => $seamless_transaction->wager_id,
-                        'event_id' => $request->getMessageID(),
-                        'seamless_transaction_id' => $seamless_transaction->id,
-                    ],
-                ]);
                 // TODO: ask: what if operator doesn't want to pay bonus
                 $this->processTransfer(
                     User::adminUser(),
@@ -114,9 +44,9 @@ class BonusController extends Controller
                     $seamless_transaction->transaction_amount,
                     $seamless_transaction->rate,
                     [
-                        'wager_id' => $seamless_transaction->wager_id,
-                        'event_id' => $request->getMessageID(),
-                        'seamless_transaction_id' => $seamless_transaction->id,
+                        "wager_id" => $seamless_transaction->wager_id,
+                        "event_id" => $request->getMessageID(),
+                        "seamless_transaction_id" => $seamless_transaction->id,
                     ]
                 );
             }
@@ -138,7 +68,7 @@ class BonusController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'message' => $e->getMessage(),
+                "message" => $e->getMessage()
             ]);
         }
     }
