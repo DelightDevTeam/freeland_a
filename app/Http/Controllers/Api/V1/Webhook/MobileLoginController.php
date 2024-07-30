@@ -34,7 +34,7 @@ class MobileLoginController extends Controller
         return [
             'ErrorCode' => 0,
             'ErrorMessage' => '',
-            'BeforeBalance' => $member->balance,
+            'BeforeBalance' => $member->balanceFloat,
         ];
     }
 }
